@@ -1,13 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
 
-const Comics = () => {
+const Comics = ({ searchResult }) => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
-
-  const location = useLocation();
-  const { characterId } = location.state;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,37 +18,48 @@ const Comics = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:4000/comics/${characterId}`
-        );
-        setData(response.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    fetchData();
-  }, [characterId]);
+  console.log("====", searchResult);
 
   return isLoading ? (
     <span>En cours de chargement ... </span>
   ) : (
-    <div>
-      {data.results.map((comic) => {
-        return (
-          <div key={comic._id}>
-            <h2>{comic.title}</h2>
-            <img
-              src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
-              alt={comic.name}
-            />
-            <p> {comic.description} </p>
-          </div>
-        );
-      })}
+    <div className=" body">
+      {searchResult.length > 1 ? (
+        <div className="container containerComic">
+          {" "}
+          {searchResult.sort().map((comic) => {
+            return (
+              <div key={comic._id} className="comicCard">
+                <h2>{comic.title}</h2>
+                <img
+                  className="comicImg"
+                  src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                  alt={comic.name}
+                />
+
+                {comic.description ? <p> {comic.description} </p> : null}
+              </div>
+            );
+          })}{" "}
+        </div>
+      ) : (
+        <div className="container containerComic">
+          {data.results.map((comic, index) => {
+            return (
+              <div key={comic._id} className="comicCard">
+                <h2>{comic.title}</h2>
+                <img
+                  className="comicImg"
+                  src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                  alt={comic.name}
+                />
+                {comic.description ? <p> {comic.description} </p> : null}
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {/* </div> */}
     </div>
   );
 };

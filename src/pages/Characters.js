@@ -22,27 +22,24 @@ const Characters = () => {
   return isLoading ? (
     <span>En cours de chargement ...</span>
   ) : (
-    <div>
-      {data.results.map((character) => {
-        return (
-          <Link
-            state={{
-              characterId: character._id,
-            }}
-            key={character._id}
-            to={`/comics/${character._id}`}
-          >
-            <div key={character._id}>
-              <h2>{character.name}</h2>
-              <img
-                src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
-                alt={character.name}
-              />
-              <p>{character.description}</p>
-            </div>
-          </Link>
-        );
-      })}
+    <div className="body">
+      <div className="container containerCharacter">
+        {data.results.map((character) => {
+          return (
+            <Link key={character._id} to={`/comics/${character._id}`}>
+              <div className="characterCard" key={character._id}>
+                <h2>{character.name}</h2>
+                <img
+                  className="characterImg "
+                  src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
+                  alt={character.name}
+                />
+                <p>{character.description}</p>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };
