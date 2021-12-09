@@ -1,7 +1,9 @@
 import MarvelLogo from "../asset/MarvelLogo.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Header = ({ handleChangeCom, searchResult }) => {
+const Header = ({ handleChangeCom, searchResult, token, setUser }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="header">
       <div className="container">
@@ -21,6 +23,22 @@ const Header = ({ handleChangeCom, searchResult }) => {
         <Link to="/comics">
           <span className="test">Comics</span>
         </Link>
+
+        {token ? (
+          <button
+            onClick={() => {
+              setUser(null);
+              navigate("/");
+            }}
+          >
+            Se déconnecter{" "}
+          </button>
+        ) : (
+          <div>
+            <Link to="/login"> Se connecter</Link>
+            <Link to="/signup"> S'inscrire </Link>
+          </div>
+        )}
       </div>
     </div>
   );

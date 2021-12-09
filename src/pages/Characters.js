@@ -5,11 +5,19 @@ import { Link } from "react-router-dom";
 const Characters = () => {
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [numPage, setNumPage] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/characters");
+        const response = await axios.get(
+          `http://localhost:4000/characters?limit=75&skip=${page}`
+        );
+
+        setNumPage(
+          Array.from(Array(Math.ceil(response.data.count / 75)).keys())
+        );
         setData(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -17,7 +25,7 @@ const Characters = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [page]);
 
   return isLoading ? (
     <span>En cours de chargement ...</span>
@@ -37,6 +45,19 @@ const Characters = () => {
                 <p>{character.description}</p>
               </div>
             </Link>
+          );
+        })}
+      </div>
+      <div className="pagination">
+        {numPage.map((page) => {
+          return (
+            <button
+              onClick={() => {
+                setPage(page + 1);
+              }}
+            >
+              {page + 1}
+            </button>
           );
         })}
       </div>
